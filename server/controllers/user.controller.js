@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
-import User from "../models/user.model.js";
-import generateToken from "../utils/jwt.utils.js";
+const bcrypt = require("bcrypt");
+const User = require("../models/user.model.js");
+const generateToken = require("../utils/jwt.utils.js");
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -12,11 +12,9 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
     const user = await User.create({
       name,
       email,
@@ -38,9 +36,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/users/login
-// @access  Public
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -63,4 +58,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+module.exports = { registerUser, loginUser };

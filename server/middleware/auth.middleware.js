@@ -1,5 +1,6 @@
-import jwt from "jsonwebtoken";
-import User from "../models/user.model";
+// middleware/auth.middleware.js
+const jwt = require("jsonwebtoken");
+const User = require("../models/user.model");
 
 const protect = async (req, res, next) => {
   let token;
@@ -14,13 +15,13 @@ const protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password");
       next();
     } catch (error) {
-      res.status(401).json({ message: "Not authorized, token failed" });
+      return res.status(401).json({ message: "Not authorized, token failed" });
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: "Not authorized, no token" });
+    return res.status(401).json({ message: "Not authorized, no token" });
   }
 };
 
-export { protect };
+module.exports = protect;
